@@ -14,6 +14,7 @@ public class TransactionResultDto
     public long Timestamp { get; set; }
     public string ChainId { get; set; }
     public string BlockHash { get; set; }
+    public long BlockHeight { get; set; }
     public long Amount { get; set; }
     public string Symbol { get; set; }
     public string FromAddress { get; set; }
