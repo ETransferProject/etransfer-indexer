@@ -1,6 +1,7 @@
 using AElf.Contracts.MultiToken;
 using AElfIndexer.Client.Handlers;
 using AutoMapper;
+using ETransfer.Contracts.TokenPool;
 using ETransfer.Indexer.Entities;
 using ETransfer.Indexer.GraphQL.Dto;
 
@@ -17,5 +18,9 @@ public class ETransferIndexerAutoMapperProfile : Profile
             .ForMember(res => res.BlockTime, opt => opt.MapFrom(res => res.BlockTime.ToUtcMilliSeconds()))
             .ReverseMap();
         CreateMap<LatestBlockDto, LatestBlockIndex>().ReverseMap();
+        CreateMap<LogEventContext, TokenTransferIndex>().ReverseMap();
+        CreateMap<TokenPoolTransferred, TokenTransferIndex>().ReverseMap();
+        CreateMap<TokenPoolReleased, TokenTransferIndex>().ReverseMap();
+        CreateMap<TokenTransferIndex, TokenTransferResultDto>().ReverseMap();
     }
 }
