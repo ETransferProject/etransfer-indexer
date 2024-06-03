@@ -52,6 +52,7 @@ namespace ETransfer.Contracts.TokenPool {
         Amount = Amount,
         From = From,
         To = To,
+        Memo = Memo,
       };
     }
   }
@@ -262,6 +263,7 @@ namespace ETransfer.Contracts.TokenPool {
       }
     }
     #endregion
+
   }
 }
 #endregion
