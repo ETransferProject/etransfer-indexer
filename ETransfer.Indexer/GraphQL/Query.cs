@@ -153,7 +153,13 @@ public class Query
         }
         if (!input.TransactionId.IsNullOrWhiteSpace())
         {
-            mustQuery.Add(q => q.Term(i => i.Field(f => f.ChainId).Value(input.ChainId)));
+            mustQuery.Add(q => q.Term(i => i.Field(f => f.TransactionId).Value(input.TransactionId)));
+        }
+
+        if (!input.Channel.IsNullOrWhiteSpace())
+        {
+            mustQuery.Add(q => q.Term(i => i.Field(f => f.Channel).Value(input.Channel)));
+
         }
         if (input.StartBlockHeight.HasValue)
         {
