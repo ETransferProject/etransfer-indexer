@@ -82,10 +82,16 @@ public class ETransferIndexerTestsModule : AbpModule
                     {
                         ChainId = "AELF",
                         MultiTokenContractAddress = "XXXXXX",
+                        TokenPoolContractAddress = "AELFTokenPoolContractAddress"
                     },
                     new()
                     {
                         ChainId = "AELF",
+                    },
+                    new()
+                    {
+                        ChainId = "tDVV",
+                        TokenPoolContractAddress = "tDVVTokenPoolContractAddress"
                     }
                 };
             }

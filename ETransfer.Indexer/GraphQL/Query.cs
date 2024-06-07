@@ -8,6 +8,7 @@ using Nest;
 using ETransfer.Indexer.Entities;
 using ETransfer.Indexer.GraphQL.Dto;
 using Orleans;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.ObjectMapping;
 
 namespace ETransfer.Indexer.GraphQL;
@@ -138,5 +139,52 @@ public class Query
             TotalCount = result.Item1,
             Data = txList
         };
+    }
+
+    public static async Task<PagedResultDto<TokenSwapRecordDto>> GetSwapTokenRecord(
+        [FromServices] IAElfIndexerClientEntityRepository<TokenSwapRecordIndex, LogEventInfo> tokenSwapRepository,
+        [FromServices] IObjectMapper objectMapper, GetTokenSwapRecordInput input)
+    {
+        input.Validate();
+        var mustQuery = new List<Func<QueryContainerDescriptor<TokenSwapRecordIndex>, QueryContainer>>();
+        if (!input.ChainId.IsNullOrWhiteSpace())
+        {
+            mustQuery.Add(q => q.Term(i => i.Field(f => f.ChainId).Value(input.ChainId)));
+        }
+        if (!input.TransactionId.IsNullOrWhiteSpace())
+        {
+            mustQuery.Add(q => q.Term(i => i.Field(f => f.ChainId).Value(input.ChainId)));
+        }
+        if (input.StartBlockHeight.HasValue)
+        {
+            mustQuery.Add(q => q.Range(i => i.Field(f => f.BlockHeight).GreaterThanOrEquals(input.StartBlockHeight.Value)));
+        }
+        
+        if (input.EndBlockHeight.HasValue)
+        {
+            mustQuery.Add(q => q.Range(i => i.Field(f => f.BlockHeight).LessThanOrEquals(input.EndBlockHeight.Value)));
+        }
+        
+        if (input.TimestampMin is > 0)
+        {
+            mustQuery.Add(q => q.Range(i
+                => i.Field(f => f.Timestamp).GreaterThanOrEquals(input.TimestampMin)));
+        }
+
+        if (input.TimestampMax is > 0)
+        {
+            mustQuery.Add(q => q.Range(i
+                => i.Field(f => f.Timestamp).LessThanOrEquals(input.TimestampMax)));
+        }
+        QueryContainer Filter(QueryContainerDescriptor<TokenSwapRecordIndex> f) => f.Bool(b => b.Must(mustQuery));
+        var result = await tokenSwapRepository.GetListAsync(Filter, sortExp: k => k.BlockHeight,
+            sortType: SortOrder.Ascending, limit: input.MaxResultCount.Value, skip: input.SkipCount.Value);
+        var totalCount = 0L;
+        var tokenSwapRecordDtos =  objectMapper.Map<List<TokenSwapRecordIndex>, List<TokenSwapRecordDto>>(result.Item2);
+        if (result.Item2.Count != 0)
+        {
+            totalCount = (await tokenSwapRepository.CountAsync(Filter)).Count;
+        }
+        return new PagedResultDto<TokenSwapRecordDto>(totalCount, tokenSwapRecordDtos);
     }
 }

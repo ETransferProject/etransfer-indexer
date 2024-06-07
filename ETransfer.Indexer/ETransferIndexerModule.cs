@@ -24,6 +24,8 @@ public class ETransferIndexerModule : AElfIndexerClientPluginBaseModule<ETransfe
         serviceCollection.AddSingleton<IAElfLogEventProcessor<TransactionInfo>, TokenPoolTransferProcessor>();
         serviceCollection.AddSingleton<IAElfLogEventProcessor<TransactionInfo>, TokenPoolReleaseProcessor>();
         serviceCollection.AddSingleton<IBlockChainDataHandler, ETransferTransactionHandler>();
+        serviceCollection.AddSingleton<IAElfLogEventProcessor<LogEventInfo>, TokenSwapProcessor>();
+
         Configure<ContractInfoOptions>(configuration.GetSection("ContractInfo"));
         Configure<NodeOptions>(configuration.GetSection("Node"));
     }

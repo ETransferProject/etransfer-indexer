@@ -22,5 +22,10 @@ public class ETransferIndexerAutoMapperProfile : Profile
         CreateMap<TokenPoolTransferred, TokenTransferIndex>().ReverseMap();
         CreateMap<TokenPoolReleased, TokenTransferIndex>().ReverseMap();
         CreateMap<TokenTransferIndex, TokenTransferResultDto>().ReverseMap();
+        CreateMap<LogEventContext, TokenSwapRecordIndex>();
+        CreateMap<TokenSwapped, TokenSwapRecordIndex>()
+            .ForMember(d => d.SwapPath, opt => opt.MapFrom(s => s.SwapPath.Path.ToList()))
+            .ForMember(d => d.AmountOut, opt => opt.MapFrom(s => s.AmountOut.AmountOut.Last()));
+        CreateMap<TokenSwapRecordIndex, TokenSwapRecordDto>();
     }
 }
