@@ -1,4 +1,5 @@
 using AElf.Types;
+using AElfIndexer.Client.Handlers;
 using ETransfer.Contracts.TokenPool;
 using Xunit;
 using ETransfer.Indexer.GraphQL;
@@ -12,28 +13,55 @@ public class TokenSwappedProcessorTests : ETransferIndexerTestsBase
     [Fact]
     public async Task TokenSwapTest()
     {
-        await CreateTokenSwapEventAsync();
-        var swapRecord = await Query.GetSwapTokenRecord(TokenSwapRecordRepository, ObjectMapper,
-            new GetTokenSwapRecordInput
-            {
-                ChainId = "AELF"
-            });
-        swapRecord.TotalCount.ShouldBe(1);
-        swapRecord.Items[0].SymbolIn.ShouldBe("USDT");
-        swapRecord.Items[0].SymbolOut.ShouldBe("TEST1");
-        swapRecord.Items[0].AmountIn.ShouldBe(10000);
-        swapRecord.Items[0].AmountOut.ShouldBe(800);
-        swapRecord.Items[0].SwapPath.Count.ShouldBe(3);
-        swapRecord.Items[0].SwapPath[0].ShouldBe("USDT");
-        swapRecord.Items[0].SwapPath[1].ShouldBe("TEST");
-        swapRecord.Items[0].SwapPath[2].ShouldBe("TEST1");
-        swapRecord.Items[0].Channel.ShouldBe("Order");
-        swapRecord.Items[0].FromAddress.ShouldBe(TestAddress.ToBase58());
-        swapRecord.Items[0].ToAddress.ShouldBe(TestAddress1.ToBase58());
-        swapRecord.Items[0].FeeRate.ShouldBe(300);
+        var log = await CreateTokenSwapEventAsync();
+        {
+            var swapRecord = await Query.GetSwapTokenRecord(TokenSwapRecordRepository, ObjectMapper,
+                new GetTokenSwapRecordInput
+                {
+                    ChainId = "AELF"
+                });
+            swapRecord.TotalCount.ShouldBe(1);
+            swapRecord.Items[0].SymbolIn.ShouldBe("USDT");
+            swapRecord.Items[0].SymbolOut.ShouldBe("TEST1");
+            swapRecord.Items[0].AmountIn.ShouldBe(10000);
+            swapRecord.Items[0].AmountOut.ShouldBe(800);
+            swapRecord.Items[0].SwapPath.Count.ShouldBe(3);
+            swapRecord.Items[0].SwapPath[0].ShouldBe("USDT");
+            swapRecord.Items[0].SwapPath[1].ShouldBe("TEST");
+            swapRecord.Items[0].SwapPath[2].ShouldBe("TEST1");
+            swapRecord.Items[0].Channel.ShouldBe("Order");
+            swapRecord.Items[0].FromAddress.ShouldBe(TestAddress.ToBase58());
+            swapRecord.Items[0].ToAddress.ShouldBe(TestAddress1.ToBase58());
+            swapRecord.Items[0].FeeRate.ShouldBe(300);
+        }
+        {
+            var swapRecord = await Query.GetSwapTokenRecord(TokenSwapRecordRepository, ObjectMapper,
+                new GetTokenSwapRecordInput
+                {
+                    ChainId = "AELF",
+                    TransactionIds = new List<string>
+                    {
+                        log.TransactionId
+                    }
+                });
+            swapRecord.TotalCount.ShouldBe(1);
+            swapRecord.Items[0].SymbolIn.ShouldBe("USDT");
+            swapRecord.Items[0].SymbolOut.ShouldBe("TEST1");
+            swapRecord.Items[0].AmountIn.ShouldBe(10000);
+            swapRecord.Items[0].AmountOut.ShouldBe(800);
+            swapRecord.Items[0].SwapPath.Count.ShouldBe(3);
+            swapRecord.Items[0].SwapPath[0].ShouldBe("USDT");
+            swapRecord.Items[0].SwapPath[1].ShouldBe("TEST");
+            swapRecord.Items[0].SwapPath[2].ShouldBe("TEST1");
+            swapRecord.Items[0].Channel.ShouldBe("Order");
+            swapRecord.Items[0].FromAddress.ShouldBe(TestAddress.ToBase58());
+            swapRecord.Items[0].ToAddress.ShouldBe(TestAddress1.ToBase58());
+            swapRecord.Items[0].FeeRate.ShouldBe(300);
+        }
+        
     }
 
-    private async Task CreateTokenSwapEventAsync()
+    private async Task<LogEventContext> CreateTokenSwapEventAsync()
     {
         var tokenSwapped = new TokenSwapped
         {
@@ -58,5 +86,6 @@ public class TokenSwappedProcessorTests : ETransferIndexerTestsBase
 
         await TokenSwapProcessor.HandleEventAsync(logEventInfo, logEventContext);
         await SaveDataAsync();
+        return logEventContext;
     }
 }

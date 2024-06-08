@@ -151,10 +151,10 @@ public class Query
         {
             mustQuery.Add(q => q.Term(i => i.Field(f => f.ChainId).Value(input.ChainId)));
         }
-        if (!input.TransactionId.IsNullOrWhiteSpace())
+        if (input.TransactionIds != null && input.TransactionIds.Any())
         {
-            mustQuery.Add(q => q.Term(i => i.Field(f => f.TransactionId).Value(input.TransactionId)));
-        }
+            mustQuery.Add(q => q.Terms(i
+                => i.Field(f => f.TransactionId).Terms(input.TransactionIds)));  }
 
         if (!input.Channel.IsNullOrWhiteSpace())
         {

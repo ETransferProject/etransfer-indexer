@@ -3,7 +3,7 @@ namespace ETransfer.Indexer.GraphQL.Dto;
 public class GetTokenSwapRecordInput : PagedResultQueryInput
 {
     public string ChainId { get; set; }
-    public string TransactionId { get; set; }
+    public List<string> TransactionIds { get; set; }
     // order id
     public string Channel { get; set; }
     public long? StartBlockHeight { get; set; }
