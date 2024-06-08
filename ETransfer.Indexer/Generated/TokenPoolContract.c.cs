@@ -114,6 +114,7 @@ namespace ETransfer.Contracts.TokenPool {
         Channel = Channel,
         SwapPath = SwapPath,
         From = From,
+        FeeRate = FeeRate,
       };
     }
   }

@@ -30,6 +30,7 @@ public class TokenSwappedProcessorTests : ETransferIndexerTestsBase
         swapRecord.Items[0].Channel.ShouldBe("Order");
         swapRecord.Items[0].FromAddress.ShouldBe(TestAddress.ToBase58());
         swapRecord.Items[0].ToAddress.ShouldBe(TestAddress1.ToBase58());
+        swapRecord.Items[0].FeeRate.ShouldBe(300);
     }
 
     private async Task CreateTokenSwapEventAsync()
@@ -49,7 +50,8 @@ public class TokenSwappedProcessorTests : ETransferIndexerTestsBase
             SwapPath = new SwapPath
             {
                 Path = { "USDT", "TEST", "TEST1" }
-            }
+            },
+            FeeRate = 300
         };
         var logEventInfo = GenerateLogEventInfo(tokenSwapped);
         var logEventContext = GenerateLogEventContext();

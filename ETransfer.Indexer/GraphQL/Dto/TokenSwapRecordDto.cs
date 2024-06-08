@@ -13,5 +13,6 @@ public class TokenSwapRecordDto : GraphQLDto
     public string ToAddress { get; set; }
     public List<string> SwapPath { get; set; }
     public string Channel { get; set; }
+    public long FeeRate { get; set; }
     public DateTime Timestamp { get; set; }
 }

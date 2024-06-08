@@ -18,6 +18,7 @@ public class TokenSwapRecordIndex : AElfIndexerClientEntity<string>, IIndexBuild
     [Keyword] public string ToAddress { get; set; }
     public List<string> SwapPath { get; set; }
     [Keyword] public string Channel { get; set; }
+    public long FeeRate { get; set; }
     public DateTime Timestamp { get; set; }
 
 }
