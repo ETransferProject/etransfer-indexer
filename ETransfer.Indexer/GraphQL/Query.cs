@@ -35,7 +35,7 @@ public class Query
     
     [Name("getLatestBlock")]
     public static async Task<LatestBlockDto> GetLatestBlock(
-        [FromServices] IAElfIndexerClientEntityRepository<LatestBlockIndex, TransactionInfo> repository,
+        [FromServices] IAElfIndexerClientEntityRepository<LatestBlockIndex, LogEventInfo> repository,
         [FromServices] IObjectMapper objectMapper,
         GetLatestBlockInput input
     )
@@ -48,7 +48,7 @@ public class Query
 
     [Name("getTransaction")]
     public static async Task<TransactionListPageResultDto> GetTransactionListAsync(
-        [FromServices] IAElfIndexerClientEntityRepository<ETransferTransactionIndex, TransactionInfo> repository,
+        [FromServices] IAElfIndexerClientEntityRepository<ETransferTransactionIndex, LogEventInfo> repository,
         [FromServices] IObjectMapper objectMapper,
         GetTransactionListInput input
     )
@@ -83,7 +83,7 @@ public class Query
     
     [Name("getTokenPoolRecords")]
     public static async Task<TokenTransferListPageResultDto> GetTokenPoolRecordListAsync(
-        [FromServices] IAElfIndexerClientEntityRepository<TokenTransferIndex, TransactionInfo> repository,
+        [FromServices] IAElfIndexerClientEntityRepository<TokenTransferIndex, LogEventInfo> repository,
         [FromServices] IObjectMapper objectMapper,
         GetTokenTransferInput input
     )

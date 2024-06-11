@@ -40,7 +40,7 @@ public abstract class ETransferIndexerTestsBase : ETransferIndexerTestBase<ETran
     {
         _indexerClientInfoProvider = GetRequiredService<IAElfIndexerClientInfoProvider>();
         _blockStateSetLogEventInfoProvider = GetRequiredService<IBlockStateSetProvider<LogEventInfo>>();
-        _blockStateSetTransactionInfoProvider = GetRequiredService<IBlockStateSetProvider<TransactionInfo>>();
+        //_blockStateSetTransactionInfoProvider = GetRequiredService<IBlockStateSetProvider<TransactionInfo>>();
         _dAppDataProvider = GetRequiredService<IDAppDataProvider>();
         _dAppDataIndexManagerProvider = GetRequiredService<IDAppDataIndexManagerProvider>();
         TokenSwapProcessor = GetRequiredService<TokenSwapProcessor>();
@@ -66,18 +66,6 @@ public abstract class ETransferIndexerTestsBase : ETransferIndexerTestBase<ETran
         await _blockStateSetLogEventInfoProvider.SetCurrentBlockStateSetAsync(key, blockStateSet);
         await _blockStateSetLogEventInfoProvider.SetLongestChainBlockStateSetAsync(key,blockStateSet.BlockHash);
         
-        return key;
-    }
-    
-    protected async Task<string> InitializeBlockStateSetAsync(BlockStateSet<TransactionInfo> blockStateSet,string chainId)
-    {
-        var key = GrainIdHelper.GenerateGrainId("BlockStateSets", _indexerClientInfoProvider.GetClientId(), chainId,
-            _indexerClientInfoProvider.GetVersion());
-        
-        await _blockStateSetTransactionInfoProvider.SetBlockStateSetAsync(key,blockStateSet);
-        await _blockStateSetTransactionInfoProvider.SetCurrentBlockStateSetAsync(key, blockStateSet);
-        await _blockStateSetTransactionInfoProvider.SetLongestChainBlockStateSetAsync(key,blockStateSet.BlockHash);
-
         return key;
     }
     

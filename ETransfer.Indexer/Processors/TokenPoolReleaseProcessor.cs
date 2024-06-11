@@ -1,30 +1,15 @@
-using AElfIndexer.Client;
 using AElfIndexer.Client.Handlers;
 using AElfIndexer.Grains.State.Client;
 using ETransfer.Contracts.TokenPool;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using ETransfer.Indexer.Entities;
-using ETransfer.Indexer.Options;
-using Volo.Abp.ObjectMapping;
 
 namespace ETransfer.Indexer.Processors;
 
-public class TokenPoolReleaseProcessor : TransferProcessorBase<TokenPoolReleased>
+public class TokenPoolReleaseProcessor : TokenPoolProcessorBase<TokenPoolReleased>
 {
-    protected readonly ContractInfoOptions ContractInfoOptions;
-
-    protected readonly IAElfIndexerClientEntityRepository<TokenTransferIndex, TransactionInfo> 
-        TokenTransferIndexRepository;
-
-    public TokenPoolReleaseProcessor(ILogger<TokenPoolReleaseProcessor> logger,
-        IObjectMapper objectMapper,
-        IOptionsSnapshot<ContractInfoOptions> contractInfoOptions,
-        IAElfIndexerClientEntityRepository<TokenTransferIndex, TransactionInfo> tokenTransferIndexRepository)
-        : base(logger, objectMapper, contractInfoOptions)
+    public TokenPoolReleaseProcessor(ILogger<AElfLogEventProcessorBase<TokenPoolReleased, LogEventInfo>> logger): base(logger)
     {
-        TokenTransferIndexRepository = tokenTransferIndexRepository;
-        ContractInfoOptions = contractInfoOptions.Value;
     }
 
     protected override async Task HandleEventAsync(TokenPoolReleased eventValue, LogEventContext context)

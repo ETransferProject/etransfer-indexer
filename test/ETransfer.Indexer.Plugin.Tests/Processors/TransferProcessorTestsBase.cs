@@ -2,9 +2,7 @@ using AElf.Contracts.MultiToken;
 using AElf.CSharp.Core.Extension;
 using AElf.Types;
 using AElfIndexer;
-using AElfIndexer.Block.Dtos;
 using AElfIndexer.Client;
-using AElfIndexer.Client.Handlers;
 using AElfIndexer.Client.Providers;
 using AElfIndexer.Grains.State.Client;
 using ETransfer.Contracts.TokenPool;
@@ -14,12 +12,10 @@ using Moq;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Shouldly;
 using ETransfer.Indexer.GraphQL;
-using ETransfer.Indexer.Orleans.TestBase;
 using ETransfer.Indexer.Processors;
 using ETransfer.Indexer.Entities;
 using ETransfer.Indexer.GraphQL.Dto;
 using ETransfer.Indexer.Options;
-using ETransfer.Indexer.Tests.Helper;
 using Orleans;
 using Volo.Abp.ObjectMapping;
 using Xunit;
@@ -28,20 +24,20 @@ namespace ETransfer.Indexer.Tests.Processors;
 
 public sealed class TransferProcessorTestsBase : ETransferIndexerTestsBase
 {
-    private readonly IAElfIndexerClientEntityRepository<ETransferTransactionIndex, TransactionInfo> _recordRepository;
-    private readonly IAElfIndexerClientEntityRepository<TokenTransferIndex, TransactionInfo> _tokenTransferRepository;
-    private readonly IAElfIndexerClientEntityRepository<LatestBlockIndex, TransactionInfo> _latestRepository;
+    private readonly IAElfIndexerClientEntityRepository<ETransferTransactionIndex, LogEventInfo> _recordRepository;
+    private readonly IAElfIndexerClientEntityRepository<TokenTransferIndex, LogEventInfo> _tokenTransferRepository;
+    private readonly IAElfIndexerClientEntityRepository<LatestBlockIndex, LogEventInfo> _latestRepository;
     private readonly IObjectMapper _objectMapper;
     private static DateTime _testDateTime = new DateTime(2023, 1, 1, 1, 1, 1);
 
     public TransferProcessorTestsBase()
     {
         _recordRepository =
-            GetRequiredService<IAElfIndexerClientEntityRepository<ETransferTransactionIndex, TransactionInfo>>();
+            GetRequiredService<IAElfIndexerClientEntityRepository<ETransferTransactionIndex, LogEventInfo>>();
         _tokenTransferRepository =
-            GetRequiredService<IAElfIndexerClientEntityRepository<TokenTransferIndex, TransactionInfo>>();
+            GetRequiredService<IAElfIndexerClientEntityRepository<TokenTransferIndex, LogEventInfo>>();
         _latestRepository =
-            GetRequiredService<IAElfIndexerClientEntityRepository<LatestBlockIndex, TransactionInfo>>();
+            GetRequiredService<IAElfIndexerClientEntityRepository<LatestBlockIndex, LogEventInfo>>();
         _objectMapper = GetRequiredService<IObjectMapper>();
     }
 
@@ -80,7 +76,7 @@ public sealed class TransferProcessorTestsBase : ETransferIndexerTestsBase
         var logEventContext = MockLogEventContext();
         var stateSetKey = await MockBlockState(logEventContext);
 
-        var blockStateSetTransaction = new BlockStateSet<TransactionInfo>
+        var blockStateSetTransaction = new BlockStateSet<LogEventInfo>
         {
             BlockHash = logEventContext.BlockHash,
             BlockHeight = logEventContext.BlockHeight,
@@ -103,7 +99,7 @@ public sealed class TransferProcessorTestsBase : ETransferIndexerTestsBase
         await transferProcess.HandleEventAsync(logEventInfo, logEventContext);
 
         await BlockStateSetSaveDataAsync<LogEventInfo>(stateSetKey);
-        await BlockStateSetSaveDataAsync<TransactionInfo>(blockStateSetKeyTransaction);
+        await BlockStateSetSaveDataAsync<LogEventInfo>(blockStateSetKeyTransaction);
 
 
         var recordData =
@@ -133,7 +129,7 @@ public sealed class TransferProcessorTestsBase : ETransferIndexerTestsBase
         var logEventContext = MockLogEventContext();
         var stateSetKey = await MockBlockState(logEventContext);
 
-        var blockStateSetTransaction = new BlockStateSet<TransactionInfo>
+        var blockStateSetTransaction = new BlockStateSet<LogEventInfo>
         {
             BlockHash = logEventContext.BlockHash,
             BlockHeight = logEventContext.BlockHeight,
@@ -158,7 +154,7 @@ public sealed class TransferProcessorTestsBase : ETransferIndexerTestsBase
         await transferProcess.HandleEventAsync(logEventInfo, logEventContext);
 
         await BlockStateSetSaveDataAsync<LogEventInfo>(stateSetKey);
-        await BlockStateSetSaveDataAsync<TransactionInfo>(blockStateSetKeyTransaction);
+        await BlockStateSetSaveDataAsync<LogEventInfo>(blockStateSetKeyTransaction);
         
         var recordData =
             await _tokenTransferRepository.GetAsync(IdGenerateHelper.GetId(logEventInfo.ChainId, 
@@ -184,7 +180,7 @@ public sealed class TransferProcessorTestsBase : ETransferIndexerTestsBase
         var logEventContext = MockLogEventContext();
         var stateSetKey = await MockBlockState(logEventContext);
 
-        var blockStateSetTransaction = new BlockStateSet<TransactionInfo>
+        var blockStateSetTransaction = new BlockStateSet<LogEventInfo>
         {
             BlockHash = logEventContext.BlockHash,
             BlockHeight = logEventContext.BlockHeight,
@@ -207,7 +203,7 @@ public sealed class TransferProcessorTestsBase : ETransferIndexerTestsBase
         await transferProcess.HandleEventAsync(logEventInfo, logEventContext);
 
         await BlockStateSetSaveDataAsync<LogEventInfo>(stateSetKey);
-        await BlockStateSetSaveDataAsync<TransactionInfo>(blockStateSetKeyTransaction);
+        await BlockStateSetSaveDataAsync<LogEventInfo>(blockStateSetKeyTransaction);
         
         var recordData =
             await _tokenTransferRepository.GetAsync(IdGenerateHelper.GetId(logEventInfo.ChainId, 

@@ -30,6 +30,8 @@ public class TokenPoolProcessorBase<TEvent> : AElfLogEventProcessorBase<TEvent, 
     protected IAElfIndexerClientEntityRepository<TokenSwapRecordIndex, LogEventInfo> TokenSwapRepository => LazyServiceProvider
         .LazyGetRequiredService<IAElfIndexerClientEntityRepository<TokenSwapRecordIndex, LogEventInfo>>();
 
+    protected IAElfIndexerClientEntityRepository<TokenTransferIndex, LogEventInfo> TokenTransferIndexRepository => LazyServiceProvider
+        .LazyGetRequiredService<IAElfIndexerClientEntityRepository<TokenTransferIndex, LogEventInfo>>();
 
     public override string GetContractAddress(string chainId)
     {
