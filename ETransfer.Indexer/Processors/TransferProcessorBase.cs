@@ -8,7 +8,7 @@ using Volo.Abp.ObjectMapping;
 
 namespace ETransfer.Indexer.Processors;
 
-public class TransferProcessorBase<TEvent> : AElfLogEventProcessorBase<TEvent, LogEventInfo>
+public class TransferProcessorBase<TEvent> : AElfLogEventProcessorBase<TEvent, TransactionInfo>
     where TEvent : IEvent<TEvent>, new()
 {
     protected readonly ILogger<TransferProcessorBase<TEvent>> Logger;

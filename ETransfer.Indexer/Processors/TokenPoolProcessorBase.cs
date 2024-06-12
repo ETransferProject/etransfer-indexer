@@ -11,10 +11,10 @@ using Volo.Abp.DependencyInjection;
 
 namespace ETransfer.Indexer.Processors;
 
-public class TokenPoolProcessorBase<TEvent> : AElfLogEventProcessorBase<TEvent, LogEventInfo>
+public class TokenPoolProcessorBase<TEvent> : AElfLogEventProcessorBase<TEvent, TransactionInfo>
     where TEvent : IEvent<TEvent>, new()
 {
-    public TokenPoolProcessorBase(ILogger<AElfLogEventProcessorBase<TEvent, LogEventInfo>> logger) : base(logger)
+    public TokenPoolProcessorBase(ILogger<AElfLogEventProcessorBase<TEvent, TransactionInfo>> logger) : base(logger)
     {
     }
     
@@ -24,14 +24,14 @@ public class TokenPoolProcessorBase<TEvent> : AElfLogEventProcessorBase<TEvent, 
     protected ContractInfoOptions ContractInfoOptions =>
         LazyServiceProvider.LazyGetRequiredService<IOptionsSnapshot<ContractInfoOptions>>().Value;
     
-    protected ILogger<AElfLogEventProcessorBase<TEvent, LogEventInfo>> Logger => LazyServiceProvider
-        .LazyGetRequiredService<ILogger<AElfLogEventProcessorBase<TEvent, LogEventInfo>>>();
+    protected ILogger<AElfLogEventProcessorBase<TEvent, TransactionInfo>> Logger => LazyServiceProvider
+        .LazyGetRequiredService<ILogger<AElfLogEventProcessorBase<TEvent, TransactionInfo>>>();
     
-    protected IAElfIndexerClientEntityRepository<TokenSwapRecordIndex, LogEventInfo> TokenSwapRepository => LazyServiceProvider
-        .LazyGetRequiredService<IAElfIndexerClientEntityRepository<TokenSwapRecordIndex, LogEventInfo>>();
+    protected IAElfIndexerClientEntityRepository<TokenSwapRecordIndex, TransactionInfo> TokenSwapRepository => LazyServiceProvider
+        .LazyGetRequiredService<IAElfIndexerClientEntityRepository<TokenSwapRecordIndex, TransactionInfo>>();
 
-    protected IAElfIndexerClientEntityRepository<TokenTransferIndex, LogEventInfo> TokenTransferIndexRepository => LazyServiceProvider
-        .LazyGetRequiredService<IAElfIndexerClientEntityRepository<TokenTransferIndex, LogEventInfo>>();
+    protected IAElfIndexerClientEntityRepository<TokenTransferIndex, TransactionInfo> TokenTransferIndexRepository => LazyServiceProvider
+        .LazyGetRequiredService<IAElfIndexerClientEntityRepository<TokenTransferIndex, TransactionInfo>>();
 
     public override string GetContractAddress(string chainId)
     {

@@ -15,17 +15,17 @@ public class TransferProcessor : TransferProcessorBase<Transferred>
 {
     protected readonly ContractInfoOptions ContractInfoOptions;
 
-    protected readonly IAElfIndexerClientEntityRepository<ETransferTransactionIndex, LogEventInfo>
+    protected readonly IAElfIndexerClientEntityRepository<ETransferTransactionIndex, TransactionInfo>
         TransferRecordIndexRepository;
 
-    protected readonly IAElfIndexerClientEntityRepository<LatestBlockIndex, LogEventInfo>
+    protected readonly IAElfIndexerClientEntityRepository<LatestBlockIndex, TransactionInfo>
         LatestBlockIndexRepository;
 
     public TransferProcessor(ILogger<TransferProcessor> logger,
         IObjectMapper objectMapper,
         IOptionsSnapshot<ContractInfoOptions> contractInfoOptions,
-        IAElfIndexerClientEntityRepository<ETransferTransactionIndex, LogEventInfo> transferRecordIndexRepository,
-        IAElfIndexerClientEntityRepository<LatestBlockIndex, LogEventInfo> latestBlockIndexRepository)
+        IAElfIndexerClientEntityRepository<ETransferTransactionIndex, TransactionInfo> transferRecordIndexRepository,
+        IAElfIndexerClientEntityRepository<LatestBlockIndex, TransactionInfo> latestBlockIndexRepository)
         : base(logger, objectMapper, contractInfoOptions)
     {
         TransferRecordIndexRepository = transferRecordIndexRepository;

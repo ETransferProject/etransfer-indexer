@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ETransfer.Indexer.Processors;
 using ETransfer.Indexer.GraphQL;
 using ETransfer.Indexer.GraphQL.Dto;
+using ETransfer.Indexer.Handler;
 using ETransfer.Indexer.Options;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
@@ -18,10 +19,11 @@ public class ETransferIndexerModule : AElfIndexerClientPluginBaseModule<ETransfe
     {
         Configure<AbpAutoMapperOptions>(options => { options.AddMaps<ETransferIndexerModule>(); });
         var configuration = serviceCollection.GetConfiguration();
-        serviceCollection.AddSingleton<IAElfLogEventProcessor<LogEventInfo>, TransferProcessor>();
-        serviceCollection.AddSingleton<IAElfLogEventProcessor<LogEventInfo>, TokenPoolTransferProcessor>();
-        serviceCollection.AddSingleton<IAElfLogEventProcessor<LogEventInfo>, TokenPoolReleaseProcessor>();
-        serviceCollection.AddSingleton<IAElfLogEventProcessor<LogEventInfo>, TokenSwapProcessor>();
+        serviceCollection.AddSingleton<IAElfLogEventProcessor<TransactionInfo>, TransferProcessor>();
+        serviceCollection.AddSingleton<IAElfLogEventProcessor<TransactionInfo>, TokenPoolTransferProcessor>();
+        serviceCollection.AddSingleton<IAElfLogEventProcessor<TransactionInfo>, TokenPoolReleaseProcessor>();
+        serviceCollection.AddSingleton<IAElfLogEventProcessor<TransactionInfo>, TokenSwapProcessor>();
+        serviceCollection.AddSingleton<IBlockChainDataHandler, ETransferTransactionHandler>();
 
         Configure<ContractInfoOptions>(configuration.GetSection("ContractInfo"));
         Configure<NodeOptions>(configuration.GetSection("Node"));

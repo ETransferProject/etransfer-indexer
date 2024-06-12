@@ -25,7 +25,7 @@ public abstract class ETransferIndexerTestsBase : ETransferIndexerTestBase<ETran
     private readonly IDAppDataIndexManagerProvider _dAppDataIndexManagerProvider;
     protected readonly IObjectMapper ObjectMapper;
     protected readonly TokenSwapProcessor TokenSwapProcessor;
-    protected readonly IAElfIndexerClientEntityRepository<TokenSwapRecordIndex, LogEventInfo> TokenSwapRecordRepository;
+    protected readonly IAElfIndexerClientEntityRepository<TokenSwapRecordIndex, TransactionInfo> TokenSwapRecordRepository;
     protected Address TestAddress = Address.FromBase58("ooCSxQ7zPw1d4rhQPBqGKB6myvuWbicCiw3jdcoWEMMpa54ea");
     protected Address TestAddress1 = Address.FromBase58("nn659b9X1BLhnu5RWmEUbuuV7J9QKVVSN54j9UmeCbF3Dve5D");
     protected string ChainId = "AELF";
@@ -40,14 +40,14 @@ public abstract class ETransferIndexerTestsBase : ETransferIndexerTestBase<ETran
     {
         _indexerClientInfoProvider = GetRequiredService<IAElfIndexerClientInfoProvider>();
         _blockStateSetLogEventInfoProvider = GetRequiredService<IBlockStateSetProvider<LogEventInfo>>();
-        //_blockStateSetTransactionInfoProvider = GetRequiredService<IBlockStateSetProvider<TransactionInfo>>();
+        _blockStateSetTransactionInfoProvider = GetRequiredService<IBlockStateSetProvider<TransactionInfo>>();
         _dAppDataProvider = GetRequiredService<IDAppDataProvider>();
         _dAppDataIndexManagerProvider = GetRequiredService<IDAppDataIndexManagerProvider>();
         TokenSwapProcessor = GetRequiredService<TokenSwapProcessor>();
         TokenSwapRecordRepository =
-            GetRequiredService<IAElfIndexerClientEntityRepository<TokenSwapRecordIndex, LogEventInfo>>();
+            GetRequiredService<IAElfIndexerClientEntityRepository<TokenSwapRecordIndex, TransactionInfo>>();
         BlockStateSetKey = AsyncHelper.RunSync(async () => await InitializeBlockStateSetAsync(
-            new BlockStateSet<LogEventInfo>
+            new BlockStateSet<TransactionInfo>
             {
                 BlockHash = BlockHash,
                 BlockHeight = BlockHeight,
@@ -57,15 +57,15 @@ public abstract class ETransferIndexerTestsBase : ETransferIndexerTestBase<ETran
         ObjectMapper = GetRequiredService<IObjectMapper>();
     }
 
-    protected async Task<string> InitializeBlockStateSetAsync(BlockStateSet<LogEventInfo> blockStateSet,string chainId)
+    protected async Task<string> InitializeBlockStateSetAsync(BlockStateSet<TransactionInfo> blockStateSet,string chainId)
     {
         var key = GrainIdHelper.GenerateGrainId("BlockStateSets", _indexerClientInfoProvider.GetClientId(), chainId,
             _indexerClientInfoProvider.GetVersion());
         
-        await _blockStateSetLogEventInfoProvider.SetBlockStateSetAsync(key,blockStateSet);
-        await _blockStateSetLogEventInfoProvider.SetCurrentBlockStateSetAsync(key, blockStateSet);
-        await _blockStateSetLogEventInfoProvider.SetLongestChainBlockStateSetAsync(key,blockStateSet.BlockHash);
-        
+        await _blockStateSetTransactionInfoProvider.SetBlockStateSetAsync(key,blockStateSet);
+        await _blockStateSetTransactionInfoProvider.SetCurrentBlockStateSetAsync(key, blockStateSet);
+        await _blockStateSetTransactionInfoProvider.SetLongestChainBlockStateSetAsync(key,blockStateSet.BlockHash);
+
         return key;
     }
     
@@ -112,7 +112,7 @@ public abstract class ETransferIndexerTestsBase : ETransferIndexerTestBase<ETran
 
     protected async Task<string> MockBlockState(LogEventContext logEventContext)
     {
-        var blockStateSet = new BlockStateSet<LogEventInfo>
+        var blockStateSet = new BlockStateSet<TransactionInfo>
         {
             BlockHash = logEventContext.BlockHash,
             BlockHeight = logEventContext.BlockHeight,
@@ -149,7 +149,7 @@ public abstract class ETransferIndexerTestsBase : ETransferIndexerTestBase<ETran
     {
         await _dAppDataProvider.SaveDataAsync();
         await _dAppDataIndexManagerProvider.SavaDataAsync();
-        await _blockStateSetLogEventInfoProvider.SaveDataAsync(BlockStateSetKey);
+        await _blockStateSetTransactionInfoProvider.SaveDataAsync(BlockStateSetKey);
     }
 
 }

@@ -8,7 +8,7 @@ namespace ETransfer.Indexer.Processors;
 
 public class TokenPoolTransferProcessor : TokenPoolProcessorBase<TokenPoolTransferred>
 {
-    public TokenPoolTransferProcessor(ILogger<AElfLogEventProcessorBase<TokenPoolTransferred, LogEventInfo>> logger): base(logger)
+    public TokenPoolTransferProcessor(ILogger<AElfLogEventProcessorBase<TokenPoolTransferred, TransactionInfo>> logger): base(logger)
     {
     }
 

@@ -7,7 +7,7 @@ namespace ETransfer.Indexer.Processors;
 
 public class TokenSwapProcessor : TokenPoolProcessorBase<TokenSwapped>
 {
-    public TokenSwapProcessor(ILogger<AElfLogEventProcessorBase<TokenSwapped, LogEventInfo>> logger) : base(logger)
+    public TokenSwapProcessor(ILogger<AElfLogEventProcessorBase<TokenSwapped, TransactionInfo>> logger) : base(logger)
     {
     }
 
