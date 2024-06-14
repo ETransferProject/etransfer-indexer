@@ -6,14 +6,16 @@
         "MultiTokenContractAddress": "JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE",
         "TokenPoolAccountAddresses": [
           "ET1RVbTd9aNz4RP8oKDmJdBDa3MnWLztgQhW9uwmKrD32vGDR"
-        ]
+        ],
+        "TokenPoolContractAddress": ""
       },
       {
         "ChanId": "tDVV",
         "MultiTokenContractAddress": "7RzVGiuVWkvL4VfVHdZfQF2Tri3sgLe9U991bohHFfSRZXuGX",
         "TokenPoolAccountAddresses": [
           "2AgU8BfyKyrxUrmskVCUukw63Wk96MVfVoJzDDbwKszafioCN1"
-        ]
+        ],
+        "TokenPoolContractAddress": ""
       }
     ]
   }

@@ -15,7 +15,6 @@ public class TransferProcessorBase<TEvent> : AElfLogEventProcessorBase<TEvent, T
     protected readonly IObjectMapper ObjectMapper;
     protected readonly ContractInfoOptions ContractInfoOptions;
 
-
     public TransferProcessorBase(ILogger<TransferProcessorBase<TEvent>> logger,
         IObjectMapper objectMapper,
         IOptionsSnapshot<ContractInfoOptions> contractInfoOptions) : base(logger)
@@ -27,7 +26,7 @@ public class TransferProcessorBase<TEvent> : AElfLogEventProcessorBase<TEvent, T
 
     public override string GetContractAddress(string chainId)
     {
-        return ContractInfoOptions.ContractInfos.First(o => o.ChainId == chainId ).MultiTokenContractAddress;
+        return ContractInfoOptions.ContractInfos.First(o => o.ChainId == chainId).MultiTokenContractAddress;
     }
     
 }

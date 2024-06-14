@@ -19,9 +19,12 @@ public class ETransferIndexerModule : AElfIndexerClientPluginBaseModule<ETransfe
     {
         Configure<AbpAutoMapperOptions>(options => { options.AddMaps<ETransferIndexerModule>(); });
         var configuration = serviceCollection.GetConfiguration();
-        // serviceCollection.AddSingleton<IAElfDataProvider, AElfDataProvider>(); 
         serviceCollection.AddSingleton<IAElfLogEventProcessor<TransactionInfo>, TransferProcessor>();
+        serviceCollection.AddSingleton<IAElfLogEventProcessor<TransactionInfo>, TokenPoolTransferProcessor>();
+        serviceCollection.AddSingleton<IAElfLogEventProcessor<TransactionInfo>, TokenPoolReleaseProcessor>();
+        serviceCollection.AddSingleton<IAElfLogEventProcessor<TransactionInfo>, TokenSwapProcessor>();
         serviceCollection.AddSingleton<IBlockChainDataHandler, ETransferTransactionHandler>();
+
         Configure<ContractInfoOptions>(configuration.GetSection("ContractInfo"));
         Configure<NodeOptions>(configuration.GetSection("Node"));
     }
