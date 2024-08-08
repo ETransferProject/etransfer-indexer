@@ -7,7 +7,7 @@
         <Configuration>
           <Format>cobertura</Format>
           <Exclude>[xunit.*]*,[*Tests]*</Exclude> <!-- [Assembly-Filter]Type-Filter -->
-          <ExcludeByFile>**/test/**/*.cs,**/ETransfer.Indexer/Generated/*.cs,**/ETransfer.Indexer/GraphQL/Dto/*.cs</ExcludeByFile>
+          <ExcludeByFile>**/test/**/*.cs,**/src/ETransferIndexer/Contracts/*.cs,**/src/ETransferIndexer/GraphQL/Dto/*.cs,**/src/ETransferIndexer/GraphQL/Input/*.cs</ExcludeByFile>
           <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute</ExcludeByAttribute>
           <SingleHit>false</SingleHit>
         </Configuration>
