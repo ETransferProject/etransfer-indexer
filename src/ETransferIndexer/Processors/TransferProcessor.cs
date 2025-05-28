@@ -11,11 +11,6 @@ public class TransferProcessor : TransferProcessorBase<Transferred>
     {
         try
         {
-            Logger.LogInformation(
-                "Transferred start, blockHeight:{Height}, blockHash:{Hash}, txId:{txId}", context.Block.BlockHeight,
-                context.Block.BlockHash,
-                context.Transaction.TransactionId);
-
             // only one data
             var latestBlock = new LatestBlockIndex
             {
@@ -35,6 +30,11 @@ public class TransferProcessor : TransferProcessorBase<Transferred>
             {
                 return;
             }
+            
+            // Logger.LogInformation(
+            //     "Transferred start, blockHeight:{Height}, blockHash:{Hash}, txId:{txId}", context.Block.BlockHeight,
+            //     context.Block.BlockHash,
+            //     context.Transaction.TransactionId);
 
             var record = new ETransferTransactionIndex
             {
@@ -59,9 +59,9 @@ public class TransferProcessor : TransferProcessorBase<Transferred>
             
             record.Id = IdGenerateHelper.GetId(context.Block.BlockHash, context.Transaction.TransactionId);
             await SaveEntityAsync(record);
-            Logger.LogInformation(
-                "Transferred end, blockHeight:{Height}, fromAddress:{FromAddress}, toAddress:{ToAddress}, from:{TxFrom}, to:{TxTo}",
-                context.Block.BlockHeight, record.FromAddress, record.ToAddress, record.From, record.To);
+            // Logger.LogInformation(
+            //     "Transferred end, blockHeight:{Height}, fromAddress:{FromAddress}, toAddress:{ToAddress}, from:{TxFrom}, to:{TxTo}",
+            //     context.Block.BlockHeight, record.FromAddress, record.ToAddress, record.From, record.To);
         }
         catch (Exception e)
         {

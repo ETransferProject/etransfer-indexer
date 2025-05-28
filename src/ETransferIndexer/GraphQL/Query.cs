@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using AeFinder.Sdk;
 using ETransferIndexer.Entities;
 using GraphQL;
@@ -35,7 +36,9 @@ public class Query
         var queryable = await repository.GetQueryableAsync();
         if (!input.TransactionIds.IsNullOrEmpty())
         {
-            queryable = queryable.Where(a => string.Join(ETransferConst.Comma, input.TransactionIds).Contains(a.TransactionId));
+            queryable = queryable.Where(input.TransactionIds.Select(txId =>
+                    (Expression<Func<ETransferTransactionIndex, bool>>)(t => t.TransactionId == txId))
+                .Aggregate((prev, next) => prev.Or(next)));
         }
 
         if (input.StartBlockHeight > 0)
@@ -67,7 +70,9 @@ public class Query
         var queryable = await repository.GetQueryableAsync();
         if (!input.TransactionIds.IsNullOrEmpty())
         {
-            queryable = queryable.Where(a => string.Join(ETransferConst.Comma, input.TransactionIds).Contains(a.TransactionId));
+            queryable = queryable.Where(input.TransactionIds.Select(txId =>
+                    (Expression<Func<TokenTransferIndex, bool>>)(t => t.TransactionId == txId))
+                .Aggregate((prev, next) => prev.Or(next)));
         }
 
         if (input.StartBlockHeight > 0)
@@ -124,7 +129,9 @@ public class Query
 
         if (input.TransactionIds != null && input.TransactionIds.Any())
         {
-            queryable = queryable.Where(a => string.Join(ETransferConst.Comma, input.TransactionIds).Contains(a.TransactionId));
+            queryable = queryable.Where(input.TransactionIds.Select(txId =>
+                    (Expression<Func<TokenSwapRecordIndex, bool>>)(t => t.TransactionId == txId))
+                .Aggregate((prev, next) => prev.Or(next)));
         }
 
         if (!input.Channel.IsNullOrWhiteSpace())
